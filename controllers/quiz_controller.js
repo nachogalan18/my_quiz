@@ -67,6 +67,15 @@ exports.check = function(req, res, next) {
 								   answer: answer });
 };
 
+// GET /quizes?search=texto_a_buscar
+exports.search = function(req, res, next) {
+  models.Quiz.findAll({where: ["question like ?", '%'+req.query.search.split(" ").join("%")+'%']})
+    .then(function(quizzes) {
+      quizzes=quizzes.sort();
+      res.render('quizzes/index.ejs', { quizzes: quizzes});
+    }).catch(function(error) { next(error); });
+};
+
 
 // GET /quizzes/new
 exports.new = function(req, res, next) {
